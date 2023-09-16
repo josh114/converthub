@@ -12,5 +12,5 @@ func main () {
 	database.ConnectDb()
 	app:= fiber.New()
 
-	log.Fatal(app.Listen(":9050"))
+	log.Fatal(app.Listen(":9010"))
 }
