@@ -10,8 +10,8 @@ import (
 
 
 func main() {
-	database.ConnectDb()
 	app := fiber.New()
+	database.ConnectDb()
 	router.SetupRoutes(app)
 	log.Fatal(app.Listen(":9015"))
 }
