@@ -4,9 +4,9 @@ import (
 	"errors"
 	"log"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/josh114/converthub/src/auth/database"
 	"github.com/josh114/converthub/src/auth/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func findUser(email string, user *models.User) error {
@@ -17,18 +17,12 @@ func findUser(email string, user *models.User) error {
 	return nil
 }
 
-func Login(c *fiber.Ctx) error {
+func Verify (email string, password string) bool {
 	var user models.User
-
-	if err := c.BodyParser(&user); err != nil {
-		c.Status(400).JSON(err.Error())
-	}
-	email := user.Email
 	if err := findUser(email, &user); err != nil {
-		c.Status(400).JSON(err.Error())
+		log.Println(err.Error())
 	}
-	log.Println("this is user data", user)
-
-	c.Status(200).SendString("auth data accepted")
-	return nil
+	hash := user.Password
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
