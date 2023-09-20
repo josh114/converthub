@@ -2,6 +2,7 @@ package api
 
 import (
 	"log"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/josh114/converthub/src/user/database"
@@ -10,6 +11,7 @@ import (
 
 type User struct {
 	ID uint `json:"id"`
+	CreatedAt time.Time
 	FirstName string `json:"first_name"`
 	LastName string `json:"last_name"`
 	Email string `json:"email"`
@@ -17,7 +19,7 @@ type User struct {
 }
 
 func CreateResponseUser(userModel models.User) User {
-	return User{ID: userModel.ID, FirstName: userModel.FirstName, LastName: userModel.LastName, Email: userModel.Email, Username: userModel.Username }
+	return User{ID: userModel.ID, FirstName: userModel.FirstName, LastName: userModel.LastName, Email: userModel.Email, Username: userModel.Username, CreatedAt: userModel.CreatedAt }
 }
 
 func CreateUser(c *fiber.Ctx) error {
@@ -31,7 +33,7 @@ func CreateUser(c *fiber.Ctx) error {
 		c.Status(400).JSON(err.Error())
 	}
 	log.Println("this is user data", user)
-	database.Database.Db.Create(user)
+	database.Database.Db.Create(&user)
 	responseUser := CreateResponseUser(user)
 	c.Status(200).JSON(responseUser)
 
