@@ -7,6 +7,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+type upload struct {
+	Filename string
+	Size float64
+	Mimetype string
+	Ext string
+	Path string
+}
+
 func Upload(c *fiber.Ctx) error {
 	file, err := c.FormFile("file")
 	if err != nil {
