@@ -17,20 +17,17 @@ func Login(c *fiber.Ctx) error {
 	var user models.User
 
 	if err := c.BodyParser(&user); err != nil {
-		c.Status(400).JSON(err.Error())
-		return nil
+		return c.Status(400).JSON(err.Error())
 	}
 	email := user.Email
 	password := user.Password
 	
 	if !Verify(email, password) {
-		c.Status(401).SendString("invalid email or password")
-		return nil
+		return c.Status(401).SendString("invalid email or password")
 	}
 	token, err := GenerateToken(email)
 	if err != nil {
-		c.Status(500).SendString("error generating token, attempt logging in again or contact admin for help")
-		return nil
+		return c.Status(500).SendString("error generating token, attempt logging in again or contact admin for help")
 	}
 	// log.Println("this is user data", token)
 

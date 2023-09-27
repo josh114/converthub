@@ -1,12 +1,13 @@
 package models
 
-import "time"
+import (
+	"gorm.io/gorm"
+)
 
 type Upload struct {
-	ID uint `json:"id" gorm:"primaryKey"`
-	CreatedAt time.Time
-	Filename string `json:"filename"`
-	Ext string `json:"ext"`
-	Mimetype string `json:"mimetype"`
-	Path string `json:"filepath"`
+	gorm.Model
+	Filename string 
+	Ext string 
+	Size int64 
+	Path string 
 }
