@@ -1,3 +1,4 @@
 vendor
 src/auth/.env
 src/upload_api/uploads/*
+src/convert/uploads/*
