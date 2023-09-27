@@ -7,22 +7,25 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type upload struct {
-	Filename string
-	Size float64
-	Mimetype string
-	Ext string
-	Path string
+type Upload struct {
+	ID uint `json:"id"`
+	Filename string `json:"filename"`
+	Size int `json:"size"`
+	Mimetype string `json:"mime_type"`
+	Ext string `json:"ext"`
+	Path string `json:"path"`
 }
 
-func Upload(c *fiber.Ctx) error {
+
+
+func UploadFile(c *fiber.Ctx) error {
 	file, err := c.FormFile("file")
 	if err != nil {
 		return c.Status(400).SendString(fmt.Sprintf("an error occurred while uploading the file: %s", err))
 	}
-	fmt.Printf("Filename: %s\n", file.Filename)
-	fmt.Printf("Size: %d\n", file.Size)
-	fmt.Printf("MIME: %s\n", file.Header["Content-Type"])
+
+	s := file.Header["Content-Type"]
+	ext := ReturnMime(s[0])
 
 	savePath := filepath.Join("./uploads", file.Filename)
 	if err := c.SaveFile(file, savePath); err != nil {
@@ -30,7 +33,12 @@ func Upload(c *fiber.Ctx) error {
 			"error": "Failed to save file",
 		})
 	}
-
+	
+	upload, err := SaveUpload(file.Filename, file.Size, ext, savePath)
+	if err != nil {
+		c.Status(500).SendString(fmt.Sprintf("could not save data to database due to internal error: %s", err.Error()))
+	}
+	go UploadDB(upload)
 	c.Status(201).JSON(fiber.Map{
 		"message": "File uploaded successfully",
 		"filename": file.Filename,

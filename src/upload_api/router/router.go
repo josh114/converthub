@@ -7,6 +7,6 @@ import (
 
 
 func SetupRoutes(app *fiber.App) {
-	app.Post("/upload", api.Upload)
+	app.Post("/upload", api.UploadFile)
 
 }
