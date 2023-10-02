@@ -7,6 +7,7 @@ import (
 
 func ExtractTitle(s string) (string, error) {
 	// Regular expression to match the title before the file extension(s)
+	
 	r := regexp.MustCompile(`^(.*?)(\.\w+)*$`)
 
 	// Find the matched string based on the regular expression
@@ -14,9 +15,9 @@ func ExtractTitle(s string) (string, error) {
 
 	// Check if there are matches
 	if len(matches) > 1 {
+
 		return matches[1], nil
 	}
-
 	return "", fmt.Errorf("no title found")
 }
 
